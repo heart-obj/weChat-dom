@@ -16,10 +16,12 @@
   "dependencies": {
     "amfe-flexible": "^2.2.1",
     "axios": "^0.19.0",
+    "mint-ui": "^2.2.13",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vux": "^2.9.4",
-    "weixin-js-sdk": "^1.4.0-test"
+    "weixin-js-sdk": "^1.4.0-test",
+    "weui": "^2.0.0",
+    "weui.js": "^1.1.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
