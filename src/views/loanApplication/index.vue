@@ -10,6 +10,7 @@
         <div class="mint-cell-box" v-for="(item, key) in formDataArr" :key="key">
           <div @click="openPicker" v-if="item.prop === 'birthday'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" ></mt-field></div>
           <div @click="genderActionsheet" v-if="item.prop === 'gender'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" ></mt-field></div>
+          <div @click="selectRegion(true)" v-if="item.prop === 'region'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" ></mt-field></div>
           <mt-field v-if="ifType.indexOf(item.prop) < 0" :label="item.name" :placeholder="item.title" v-model="formData[item.prop]"></mt-field>
         </div>
       </div>
@@ -20,17 +21,17 @@
         上传身份证要求：<span style="color: #ff4633">1、照片清晰   2、亮度均匀   3、四角完整</span>
       </div>
       <div class="idCard-row">
-        <div class="idCard-img"><img src="./img/idcards_heads.png" alt="" srcset=""></div>
-        <div class="idCard-img"><img src="./img/idcards_national.png" alt="" srcset=""></div>
+        <div class="idCard-img" @click="uploadIdCard"><img src="./img/idcards_heads.png" alt="" srcset=""></div>
+        <div class="idCard-img" @click="uploadIdCard"><img src="./img/idcards_national.png" alt="" srcset=""></div>
       </div>
       <footer class="footer">
-        <label for="weuiAgree" class="weui-agree">
-            <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
+        <label for="weuiAgree" class="weui-agree" >
+            <span class="check_btn" :class="checkType ? 'check_btn_true' : 'check_btn_false'" @click="checkedFunc"></span>
             <span class="weui-agree__text">
                 我已阅读并同意<a href="javascript:void(0);">《贷款用户协议》</a>和<a href="javascript:void(0);">《隐私声明》</a>
             </span>
         </label>
-        <div class="submit-btn">
+        <div class="submit-btn" :class="checkType ? 'submit-btn-success' : ''" @click="submitFrom">
           提交身份验证
         </div>
       </footer>
@@ -44,16 +45,23 @@
       date-format="{value} 日"
       @confirm="handleConfirm">
     </mt-datetime-picker>
-    <mt-actionsheet
-      :actions="actions"
-      v-model="sheetVisible">
-    </mt-actionsheet>
+    <mt-actionsheet :actions="actions" v-model="sheetVisible" :closeOnClickModal="false"></mt-actionsheet>
+    <mt-actionsheet :actions="idCardPng" v-model="idCardVisible" :closeOnClickModal="false"></mt-actionsheet>
+    <div class="city-pupop-box" v-show="cityPupop">
+      <div :class="cityPupop ? 'showCity-pupop' : 'city-pupop'">
+        <div class="city-title">所在城市（省市区）<span class="close-btn" @click="selectRegion(false)"></span></div>
+        <Citylist></Citylist>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-
+import Citylist from '@/components/cityPupop'
 export default {
-  name: 'LoanApplication',
+  name: 'LoanApplication', // 首次贷款实名身份验证
+  components: {
+    Citylist
+  },
   data () {
     return {
       formDataArr: [
@@ -143,7 +151,7 @@ export default {
         yhnumber: null,
         yhnumber2: null
       },
-      ifType: ['birthday', 'gender'],
+      ifType: ['birthday', 'gender', 'region'],
       actions: [
         {
           name: '男',
@@ -158,8 +166,25 @@ export default {
           }
         }
       ],
+      idCardPng: [
+        {
+          name: '相册',
+          method: () => {
+            // this.formData.gender = '男'
+          }
+        },
+        {
+          name: '拍摄',
+          method: () => {
+            // this.formData.gender = '女'
+          }
+        }
+      ],
+      idCardVisible: false,
       sheetVisible: false,
-      datepicker: false
+      cityPupop: false,
+      datepicker: false,
+      checkType: false
     }
   },
   methods: {
@@ -175,7 +200,22 @@ export default {
     },
     genderActionsheet () {
       this.sheetVisible = true
+    },
+    selectRegion (type) {
+      this.cityPupop = type
+    },
+    uploadIdCard () {
+      this.idCardVisible = true
+    },
+    checkedFunc () {
+      this.checkType = !this.checkType
+    },
+    submitFrom () {
+      if (this.checkType) {
+        console.log('提交！！')
+      }
     }
+
   }
 }
 </script>
@@ -183,9 +223,9 @@ export default {
 a {
   text-decoration: none !important;
 }
-.box {
-  /* padding: 0 0.32rem; */
-}
+/* .box {
+  padding: 0 0.32rem;
+} */
 .box .box-h {
   box-sizing: border-box;
   font-size: 0.48rem;
@@ -242,12 +282,15 @@ a {
 }
 .mint-cell-box>>>.mint-cell-title {
   font-size: 0.373rem;
+  color: #000;
+  font-weight: 500;
   width: auto;
 }
 .mint-cell-box>>>.mint-field-core {
   font-size: 0.373rem;
   text-align: right;
   padding-right: 0.133rem;
+  color: #000;
   box-sizing: border-box;
 }
 .verify-input {
@@ -278,10 +321,26 @@ a {
 .footer .weui-agree {
   display: inline-block;
   box-sizing: border-box;
+  padding: 0.1rem;
   padding-left: 0.32rem;
   width: 100%;
   text-align: left;
+  line-height: 0.4rem;
   font-size: 0.32rem;
+}
+.check_btn {
+  width: 0.4rem;
+  height: 0.4rem;
+  display: inline-block;
+  vertical-align:middle
+}
+.check_btn_true {
+  background: url('./img/check_true.png') no-repeat center;
+  background-size: 100% 100%;
+}
+.check_btn_false {
+  background: url('./img/check_false.png') no-repeat center;
+  background-size: 100% 100%;
 }
 .footer .submit-btn {
   width: 9.36rem;
@@ -294,6 +353,10 @@ a {
   color: #999999;
   margin-top: 0.667rem;
 }
+.footer .submit-btn-success {
+  background: #00b7ee;
+  color: #ffffff;
+}
 .mint-actionsheet {
   width: 98%;
   background: none;
@@ -305,5 +368,71 @@ a {
 .mint-actionsheet>>>.mint-actionsheet-button {
   border-radius: 7px;
   overflow: hidden;
+}
+.city-pupop-box {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, .5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+}
+@keyframes myfirst {
+  0%   {bottom: -60%}
+  100% {bottom: -0%}
+}
+@keyframes hidemyfirst {
+  0%   {bottom: 0%}
+  100% {bottom: -60%}
+}
+.city-pupop {
+  width: 100%;
+  height: 60%;
+  position: absolute;
+  left: 0;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+  animation: hidemyfirst 500ms;
+  -moz-animation: hidemyfirst 500ms; /* Firefox */
+  -webkit-animation: hidemyfirst 500ms; /* Safari and Chrome */
+  -o-animation: hidemyfirst 500ms; /* Opera */
+  bottom: -60%;
+}
+.showCity-pupop {
+  width: 100%;
+  height: 60%;
+  position: absolute;
+  left: 0;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+  animation: myfirst 500ms;
+  -moz-animation: myfirst 500ms; /* Firefox */
+  -webkit-animation: myfirst 500ms; /* Safari and Chrome */
+  -o-animation: myfirst 500ms; /* Opera */
+  bottom: 0%;
+}
+.city-title {
+  box-sizing: border-box;
+  height: 1.067rem;
+  width: 100%;
+  text-align: center;
+  font-size: 0.43rem;
+  color: #000;
+  line-height: 1.067rem;
+  border: 1px solid #dddddd;
+  border-bottom: none;
+  position: relative;
+}
+.close-btn {
+  width: 0.453rem;
+  height: 0.453rem;
+  position: absolute;
+  right: 0.133rem;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: url('./img/close_icon.png') no-repeat center;
+  background-size: 100% 100%;
 }
 </style>
