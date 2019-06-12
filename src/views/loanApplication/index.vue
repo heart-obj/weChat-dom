@@ -56,7 +56,9 @@
   </div>
 </template>
 <script>
+import wx from 'weixin-js-sdk'
 import Citylist from '@/components/cityPupop'
+import { getToken } from '@/api/api'
 export default {
   name: 'LoanApplication', // 首次贷款实名身份验证
   components: {
@@ -187,7 +189,40 @@ export default {
       checkType: false
     }
   },
+  created () {
+    // this.getToken()
+  },
   methods: {
+    getToken () {
+      getToken({
+        grant_type: 'authorization_code',
+        appid: 'wx6a6d99dc83602162',
+        secret: '3b154028714a7120a44bd252fbe7d70a',
+        code: '061yf6BF18sD570j84zF1fVqBF1yf6B-'
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    wxConfig () {
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: 'wx6a6d99dc83602162', // 必填，公众号的唯一标识
+        timestamp: '1560342506', // 必填，生成签名的时间戳
+        nonceStr: '11111', // 必填，生成签名的随机串
+        signature: '11111', // 必填，签名
+        jsApiList: [
+          'token'
+        ] // 必填，需要使用的JS接口列表
+      })
+      wx.ready((res) => {
+        console.log(res)
+      })
+      wx.error((err) => {
+        console.log(err)
+      })
+    },
     cleartxt (e) {
       this.formData[e] = null
     },
