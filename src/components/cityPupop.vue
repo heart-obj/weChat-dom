@@ -136,6 +136,7 @@ export default {
 .city-box {
   width: 100%;
   height: calc(100% - 1.067rem);
+  font-size: 0.373rem;
 }
 .city-h {
   box-sizing: border-box;
@@ -158,6 +159,7 @@ export default {
 .city-col {
   padding: 0.267rem 0.32rem;
   text-align: left;
+  font-size: 0.373rem;
 }
 .thisText {
   color: #feb323;

@@ -131,6 +131,7 @@ export default {
   width: 100%;
   height: 2.773rem;
   background: url('./img/pic_review@2x.png') no-repeat center;
+  background-size: 30% 50%;
   border-bottom: 1px solid #dddddd;
 }
 .row-box {

@@ -85,6 +85,7 @@ export default {
   width: 100%;
   height: 2.773rem;
   background: url('./img/pic_pass@2x.png') no-repeat center;
+  background-size: 55% 100%;
   border-bottom: 1px solid #dddddd;
 }
 .row-box {
