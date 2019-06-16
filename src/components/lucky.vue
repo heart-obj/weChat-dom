@@ -16,7 +16,7 @@
         </div>
         <div class="row-col" :class="luckyObj.activedID === luckylist[2].id ? 'actived-col' : ''">
           <img :src="luckylist[2].imgsrc" alt="" class="img-icon">
-          <div class="col-text">手机优惠券</div>
+          <div class="col-text">小米手机</div>
         </div>
       </div>
       <div class="row">
