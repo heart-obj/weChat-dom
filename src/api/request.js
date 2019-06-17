@@ -11,7 +11,7 @@ axios.defaults.timeout = 10000
 // 设置post 请求头
 axios.defaults.headers.post['Content-type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 // 对接接口
-function request ({methods, url, params}) {
+function request ({ methods, url, params }) {
   if (methods === 'get') {
     return get(url, params)
   } else if (methods === 'post') {

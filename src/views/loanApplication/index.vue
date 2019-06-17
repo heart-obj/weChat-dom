@@ -8,9 +8,9 @@
       </div>
       <div class="mint-cells mint-cells_form">
         <div class="mint-cell-box" v-for="(item, key) in formDataArr" :key="key">
-          <div @click="openPicker" v-if="item.prop === 'birthday'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" readonly="true"></mt-field></div>
-          <div @click="genderActionsheet" v-if="item.prop === 'gender'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" readonly="true"></mt-field></div>
-          <div @click="selectRegion(true)" v-if="item.prop === 'region'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" readonly="true"></mt-field></div>
+          <div @click="openPicker" v-if="item.prop === 'birthday'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" :readonly="true"></mt-field></div>
+          <div @click="genderActionsheet" v-if="item.prop === 'gender'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" :readonly="true"></mt-field></div>
+          <div @click="selectRegion(true)" v-if="item.prop === 'region'"><mt-field  :label="item.name" :placeholder="item.title" v-model="formData[item.prop]" :readonly="true"></mt-field></div>
           <mt-field v-if="ifType.indexOf(item.prop) < 0" :label="item.name" :placeholder="item.title" v-model="formData[item.prop]"></mt-field>
         </div>
       </div>

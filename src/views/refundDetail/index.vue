@@ -39,7 +39,7 @@
 </template>
 <script>
 export default {
-  name: 'RefundDetail',
+  name: 'RefundDetail', // 贷款详情
   data () {
     return {
       queryClick: false,
