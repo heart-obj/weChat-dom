@@ -12,19 +12,19 @@
         </div>
       </div>
       <div class="row-box2">
-        <div class="row-item" @click.stop="handleClickFunc">
+        <div class="row-item" @click.stop="handleClickFunc('PersonalData')">
           <mt-cell title="个人资料" is-link></mt-cell>
         </div>
-        <div class="row-item">
+        <div class="row-item" @click.stop="handleClickFunc('Coupons')">
           <mt-cell title="优惠劵" is-link>
             <span style="color: #fc9a2b;font-size: 0.36rem;">5</span>
             <span style="color: #999999;font-size: 0.36rem;">张</span>
           </mt-cell>
         </div>
-        <div class="row-item">
-          <mt-cell title="我们的贷款" is-link></mt-cell>
+        <div class="row-item" @click.stop="handleClickFunc('HistorRecord')">
+          <mt-cell title="我的贷款" is-link ></mt-cell>
         </div>
-        <div class="row-item">
+        <div class="row-item" @click.stop="handleClickFunc('AboutUs')">
           <mt-cell title="关于我们" is-link></mt-cell>
         </div>
         <div class="row-item">
@@ -41,9 +41,9 @@
 export default {
   name: 'PersonalCenter', // 个人中心
   methods: {
-    handleClickFunc () {
+    handleClickFunc (pushName) {
       this.$router.push({
-        name: 'PersonalData',
+        name: pushName,
         query: ''
       })
     }

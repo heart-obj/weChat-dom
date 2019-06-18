@@ -11,6 +11,13 @@ import IntegralMall from '@/views/IntegralMall/index' // 积分商城
 import MyPrize from '@/views/myPrize/index' // 积分商城
 import PersonalCenter from '@/views/personalCenter/index' // 个人中心
 import PersonalData from '@/views/personalCenter/personalData/index' // 个人资料
+import Coupons from '@/views/personalCenter/coupons/index' // 个人优惠劵
+import AboutUs from '@/views/personalCenter/aboutUs/index' // 个人优惠劵
+import HistorRecord from '@/views/historRecord/index' // 贷款历史记录
+import HistorRecordDetail from '@/views/historRecord/detail' // 贷款历史记录详情
+import Agreement from '@/views/agreementAndProblem/agreement' // 协议及声明
+import Problem from '@/views/agreementAndProblem/problem' // 常见问题
+import SignIn from '@/views/signIn/index' // 常见问题
 
 Vue.use(Router)
 
@@ -69,7 +76,41 @@ export default new Router({
       path: '/PersonalData',
       name: 'PersonalData',
       component: PersonalData
+    },
+    {
+      path: '/Coupons',
+      name: 'Coupons',
+      component: Coupons
+    },
+    {
+      path: '/HistorRecord',
+      name: 'HistorRecord',
+      component: HistorRecord
+    },
+    {
+      path: '/HistorRecordDetail',
+      name: 'HistorRecordDetail',
+      component: HistorRecordDetail
+    },
+    {
+      path: '/Agreement',
+      name: 'Agreement',
+      component: Agreement
+    },
+    {
+      path: '/Problem',
+      name: 'Problem',
+      component: Problem
+    },
+    {
+      path: '/AboutUs',
+      name: 'AboutUs',
+      component: AboutUs
+    },
+    {
+      path: '/SignIn',
+      name: 'SignIn',
+      component: SignIn
     }
-
   ]
 })
