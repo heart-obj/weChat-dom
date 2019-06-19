@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div class="row" v-for="(item, i) in detailList" :key="i">
+    <div class="row" v-for="(item, i) in detailList" :key="i" @click="queryDetail">
       <div class="row-h">
         <span>{{ item.day }}</span>
         <span :style="{'color': textColor[item.state]}">{{ item.state | auditObjFunc }}</span>
@@ -59,7 +59,10 @@ export default {
   },
   methods: {
     queryDetail () {
-      this.queryClick = !this.queryClick
+      this.$router.push({
+        name: 'HistorRecordDetail',
+        query: ''
+      })
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="box">
-    <h1 class="box-h">首次贷款实名身份认证</h1>
-    <span class="box-title">为保障资金安全，首次贷款需要验证你的个人身份信息，再次贷款无需验证。</span>
+    <h1 class="box-h">贷款实名身份认证</h1>
+    <span class="box-title">为保障资金安全，贷款需要验证你的个人身份信息，再次贷款无需验证。</span>
     <div class="row-box">
       <div class="basic-row">
         <span class="basic-row-title">基础信息</span>
@@ -58,7 +58,7 @@
 <script>
 import wx from 'weixin-js-sdk'
 import Citylist from '@/components/cityPupop'
-import { getToken } from '@/api/api'
+import { getToken } from '@/api/servers'
 export default {
   name: 'LoanApplication', // 首次贷款实名身份验证
   components: {
@@ -190,15 +190,16 @@ export default {
     }
   },
   created () {
-    // this.getToken()
+    this.getToken()
   },
   methods: {
     getToken () {
+      console.log(window.location.href)
       getToken({
         grant_type: 'authorization_code',
         appid: 'wx6a6d99dc83602162',
         secret: '3b154028714a7120a44bd252fbe7d70a',
-        code: '061yf6BF18sD570j84zF1fVqBF1yf6B-'
+        code: '081WJwUz00n7Hd1aHCYz0ZLmUz0WJwUz'
       }).then(res => {
         console.log(res)
       }).catch(err => {
@@ -226,28 +227,52 @@ export default {
     cleartxt (e) {
       this.formData[e] = null
     },
+    /**
+     * 打开日期选择（生日）
+     */
     openPicker () {
       this.datepicker = true
       this.$refs.picker.open()
     },
+    /**
+     * 日期选择回调函数
+     */
     handleConfirm (value) {
       console.log(value)
     },
+    /**
+     * 控制性别选择弹窗
+     */
     genderActionsheet () {
       this.sheetVisible = true
     },
+    /**
+     * 控制地区选择
+     */
     selectRegion (type) {
       this.cityPupop = type
     },
+    /**
+     * 控制身份证上传弹窗
+     */
     uploadIdCard () {
       this.idCardVisible = true
     },
+    /**
+     * 控制选择同意《贷款用户协议》和隐私协议
+     */
     checkedFunc () {
       this.checkType = !this.checkType
     },
+    /**
+     * 提交身份验证数据
+     */
     submitFrom () {
       if (this.checkType) {
-        console.log('提交！！')
+        this.$router.push({
+          name: 'Lication',
+          query: ''
+        })
       }
     }
 

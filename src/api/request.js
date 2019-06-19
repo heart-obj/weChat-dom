@@ -1,67 +1,71 @@
 import axios from 'axios'
-if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/api'
-} else if (process.env.NODE_ENV === 'debug') {
-  axios.defaults.baseURL = '/api'
-} else if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://***********/'
-}
-// 设置超时时间
-axios.defaults.timeout = 10000
-// 设置post 请求头
-axios.defaults.headers.post['Content-type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-// 对接接口
-function request ({ methods, url, params }) {
-  if (methods === 'get') {
-    return get(url, params)
-  } else if (methods === 'post') {
-    return post(url, params)
+import Qs from 'qs'
+// 创建axios实例
+const service = axios.create({
+  baseURL: process.env.BASE_API, // api 的 base_url
+  timeout: 50000, // 请求超时时间
+  // headers: { 'uid': 1, 'Content-Type': 'application/x-www-form-urlencoded' },
+  headers: {}
+  // transformRequest: [function(data) {
+  //     data = Qs.stringify(data)
+  //     return data
+  // }]
+})
+
+// request拦截器
+service.interceptors.request.use(
+  config => {
+    if (config.formdata) {
+      config.transformRequest = [function (data) {
+        data = Qs.stringify(data)
+        return data
+      }]
+      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    }
+    /* config.headers['X-Token'] = store.getters.token // 让每个请求携带自定义token 请根据实际情况自行修改
+    config.headers['uid'] = 1
+    if (store.getters.token) {
+        config.headers['X-Token'] = this.$store.state.user.token // 让每个请求携带自定义token 请根据实际情况自行修改
+        config.headers['uid'] = this.$store.state.user.uid
+    } */
+    return config
+  },
+  error => {
+    // Do something with request error
+    console.log(error) // for debug
+    Promise.reject(error)
   }
-}
-/**
- * get请求
- * @param {*} url
- * @param {*} params
- */
-function get (url, params) {
-  return new Promise((resolve, reject) => {
-    axios.get(url, { params: params }).then(res => {
-      resolve(res)
-    }).catch(err => {
-      reject(err)
-    })
-  })
-}
-/**
- * post请求
- * @param {*} url
- * @param {*} params
- */
-function post (url, params) {
-  return new Promise((resolve, reject) => {
-    axios.post(url, params).then(res => {
-      resolve(res)
-    }).catch(err => {
-      reject(err)
-    })
-  })
-}
+)
 
-// 添加请求拦截器
-axios.interceptors.request.use(function (config) {
-  // 在发送请求之前做些什么
-  return config
-}, function (error) {
-  // 对请求错误做些什么
-  return Promise.reject(error)
-})
+// response 拦截器
+service.interceptors.response.use(
+  response => {
+    /**
+     * code为非20000是抛错 可结合自己业务进行修改
+     */
+    const res = response.data
+    if (res.code !== 200) {
+      console.log({
+        message: res.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
 
-// 添加响应拦截器
-axios.interceptors.response.use(function (response) {
-  // 对响应数据做点什么
-  return response
-}, function (error) {
-  // 对响应错误做点什么
-  return Promise.reject(error)
-})
-export default request
+      // 50008:非法的token 50012:其他客户端登录了  50014:Token 过期了
+      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {}
+      return Promise.reject('error')
+    } else {
+      return response.data
+    }
+  },
+  error => {
+    console.log(error.response) // for debug
+    var msg = '网络出现问题'
+    if (error.response && error.response.data && error.response.data.message) {
+      msg = error.response.data.message
+      console.log(msg)
+    }
+    return Promise.reject(error)
+  }
+)
+export default service

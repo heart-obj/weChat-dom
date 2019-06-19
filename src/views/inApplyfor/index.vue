@@ -13,7 +13,7 @@
     <div class="rows-box2">
       <div class="row-h">
         <span class="row-h-title">贷款历史记录</span>
-        <span>查看更多》</span>
+        <span @click="queryMoreRecord">查看更多》</span>
       </div>
       <table class="row-table">
         <tr v-for="(item, i) in tableData" :key="i">
@@ -122,7 +122,17 @@ export default {
       return auditObj[value]
     }
   },
-  methods: {}
+  methods: {
+    /**
+     * 查看更多历史记录
+     */
+    queryMoreRecord () {
+      this.$router.push({
+        name: 'HistorRecord',
+        query: ''
+      })
+    }
+  }
 }
 </script>
 <style scoped>

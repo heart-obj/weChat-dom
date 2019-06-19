@@ -10,7 +10,7 @@
         <mt-cell v-if="item.id !== 4" :title="item.lable" :value="item.value"></mt-cell>
       </div>
       <div class="footer-btn">
-        <div class="query-btn">还款计划查询</div>
+        <div class="query-btn" @click="queryPlan">还款计划查询</div>
       </div>
     </div>
   </div>
@@ -76,7 +76,14 @@ export default {
       ]
     }
   },
-  methods: {}
+  methods: {
+    queryPlan () {
+      this.$router.push({
+        name: 'RefundDetail',
+        query: ''
+      })
+    }
+  }
 }
 </script>
 <style scoped>

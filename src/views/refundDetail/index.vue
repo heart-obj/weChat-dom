@@ -39,7 +39,7 @@
 </template>
 <script>
 export default {
-  name: 'RefundDetail', // 贷款详情
+  name: 'RefundDetail', // 还款计划查询
   data () {
     return {
       queryClick: false,
@@ -106,6 +106,8 @@ export default {
   padding: 0.667rem 0;
   background: #f1f1f1;
   font-size: 0.373rem;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 .row {
   display: inline-block;

@@ -99,15 +99,25 @@ export default {
     }
   },
   methods: {
+    /**
+     * 控制贷款类型弹窗
+     */
     loanType () {
       this.sheetVisible = true
     },
     checkedFunc () {
       this.checkType = !this.checkType
     },
+    /**
+     * 提交贷款申请
+     */
     submitFrom () {
       if (this.checkType) {
         console.log('提交！！')
+        this.$router.push({
+          name: 'InApplyfor',
+          query: ''
+        })
       }
     }
   }

@@ -6,13 +6,12 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://api.weixin.qq.com',//后端接口地址
+        target: 'https://api.weixin.qq.com/',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
             '^/api': '/api',//重写,
@@ -21,7 +20,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '192.168.100.5', // can be overwritten by process.env.HOST
     port: 1234, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
