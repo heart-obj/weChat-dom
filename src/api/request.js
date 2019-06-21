@@ -44,7 +44,7 @@ service.interceptors.response.use(
      * code为非20000是抛错 可结合自己业务进行修改
      */
     const res = response.data
-    if (res.code !== 200) {
+    if (response.status !== 200 && response.status !== 304) {
       console.log({
         message: res.message,
         type: 'error',
@@ -55,7 +55,7 @@ service.interceptors.response.use(
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {}
       return Promise.reject('error')
     } else {
-      return response.data
+      return response
     }
   },
   error => {

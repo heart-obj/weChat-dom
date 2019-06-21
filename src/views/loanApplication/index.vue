@@ -58,7 +58,7 @@
 <script>
 import wx from 'weixin-js-sdk'
 import Citylist from '@/components/cityPupop'
-import { getToken } from '@/api/servers'
+import { getConfigData } from '@/api/servers'
 export default {
   name: 'LoanApplication', // 首次贷款实名身份验证
   components: {
@@ -172,6 +172,7 @@ export default {
         {
           name: '相册',
           method: () => {
+            this.wxConfig()
             // this.formData.gender = '男'
           }
         },
@@ -186,22 +187,18 @@ export default {
       sheetVisible: false,
       cityPupop: false,
       datepicker: false,
-      checkType: false
+      checkType: false,
+      config: null
     }
   },
   created () {
-    this.getToken()
+    this.getConfig()
   },
   methods: {
-    getToken () {
-      console.log(window.location.href)
-      getToken({
-        grant_type: 'authorization_code',
-        appid: 'wx6a6d99dc83602162',
-        secret: '3b154028714a7120a44bd252fbe7d70a',
-        code: '081WJwUz00n7Hd1aHCYz0ZLmUz0WJwUz'
-      }).then(res => {
-        console.log(res)
+    getConfig() {
+      getConfigData().then(res => {
+        console.log(res.data)
+        this.config = res.data
       }).catch(err => {
         console.log(err)
       })
@@ -210,9 +207,9 @@ export default {
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: 'wx6a6d99dc83602162', // 必填，公众号的唯一标识
-        timestamp: '1560342506', // 必填，生成签名的时间戳
-        nonceStr: '11111', // 必填，生成签名的随机串
-        signature: '11111', // 必填，签名
+        timestamp: this.config.timestamp, // 必填，生成签名的时间戳
+        nonceStr: this.config.nonce, // 必填，生成签名的随机串
+        signature: this.config.signature, // 必填，签名
         jsApiList: [
           'token'
         ] // 必填，需要使用的JS接口列表

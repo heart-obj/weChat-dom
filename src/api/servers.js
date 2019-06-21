@@ -6,3 +6,10 @@ export function getToken (params) {
     params
   })
 }
+export function getConfigData (params) {
+  return request({
+    methods: 'get',
+    url: 'static/configData.txt',
+    params
+  })
+}

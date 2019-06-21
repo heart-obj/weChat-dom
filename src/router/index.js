@@ -20,7 +20,6 @@ import Problem from '@/views/agreementAndProblem/problem' // 常见问题
 import SignIn from '@/views/signIn/index' // 签到
 
 Vue.use(Router)
-
 export default new Router({
   routes: [
     {
