@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Login from '@/views/login/index'inApplyfor
+import Login from '@/views/login/index'
 import LoanApplication from '@/views/loanApplication/index' // 首次贷款实名身份验证
 import Lication from '@/views/lication/index' // 贷款申请
 import InApplyfor from '@/views/inApplyfor/index' // 贷款申请中
@@ -18,13 +18,18 @@ import HistorRecordDetail from '@/views/historRecord/detail' // 贷款历史记�
 import Agreement from '@/views/agreementAndProblem/agreement' // 协议及声明
 import Problem from '@/views/agreementAndProblem/problem' // 常见问题
 import SignIn from '@/views/signIn/index' // 签到
-
+import store from '../vuex/index'
 Vue.use(Router)
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
       redirect: 'LoanApplication'
+    },
+    {
+      path: '/Login',
+      name: 'Login',
+      component: Login
     },
     {
       path: '/LoanApplication',
@@ -113,3 +118,27 @@ export default new Router({
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面title */
+  document.title = to.meta.title
+  // 第一次访问
+  const token = window.localStorage.getItem('token')
+  if (!token && to.path !== '/Login') {
+    // 保存用户进入的url
+    console.log(to.fullPath)
+    window.localStorage.setItem('beforeLoginUrl', to.fullPath)
+    next('/Login')
+  } else if (token && !store.userInfo) {
+    // 拉取用户信息
+    store.dispatch('getUserInfo').catch(err => {
+      console.log(err)
+      window.localStorage.removeItem('token')
+      router.go(0)
+    })
+    next()
+  } else {
+    // 已经登录
+    next()
+  }
+})
+export default router

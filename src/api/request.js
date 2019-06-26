@@ -1,71 +1,59 @@
-import axios from 'axios'
-import Qs from 'qs'
+// 对axios的二次封装
+import axios from 'axios' // 引入axios
+import Qs from 'qs' // 引入qs模块，用来序列化post类型的数据
+
 // 创建axios实例
-const service = axios.create({
-  baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 50000, // 请求超时时间
-  // headers: { 'uid': 1, 'Content-Type': 'application/x-www-form-urlencoded' },
-  headers: {}
-  // transformRequest: [function(data) {
-  //     data = Qs.stringify(data)
-  //     return data
-  // }]
+const instance = axios.create({
+  timeout: 1000 * 10
 })
 
-// request拦截器
-service.interceptors.request.use(
+// 环境切换
+if (process.env.NODE_ENV === 'development') {
+  // 开发环境设置代理 ==> apis
+  // instance.defaults.baseURL = '/apis'
+  instance.defaults.baseURL = 'http://25288o7y03.qicp.vip:57998'
+} else if (process.env.NODE_ENV === 'debug') {
+  instance.defaults.baseURL = 'https://www.test.com'
+} else if (process.env.NODE_ENV === 'production') {
+  instance.defaults.baseURL = 'https://www.production.com'
+}
+
+// 设置请求超时
+instance.defaults.timeout = 10000
+// POST请求头的设置
+instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+
+// 请求拦截器
+instance.interceptors.request.use(
   config => {
-    if (config.formdata) {
-      config.transformRequest = [function (data) {
-        data = Qs.stringify(data)
-        return data
-      }]
-      config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    // POST传参序列化
+    if (config.method === 'post') {
+      config.data = Qs.stringify(config.data)
     }
-    /* config.headers['X-Token'] = store.getters.token // 让每个请求携带自定义token 请根据实际情况自行修改
-    config.headers['uid'] = 1
-    if (store.getters.token) {
-        config.headers['X-Token'] = this.$store.state.user.token // 让每个请求携带自定义token 请根据实际情况自行修改
-        config.headers['uid'] = this.$store.state.user.uid
-    } */
+    // 若是有做鉴权token , 就给头部带上token
+    if (window.localStorage.getItem('token')) {
+      config.headers.Authorization = window.localStorage.getItem('token')
+    }
     return config
   },
   error => {
-    // Do something with request error
-    console.log(error) // for debug
-    Promise.reject(error)
-  }
-)
+    return Promise.reject(error)
+  })
 
-// response 拦截器
-service.interceptors.response.use(
+// 响应拦截器
+instance.interceptors.response.use(
   response => {
-    /**
-     * code为非20000是抛错 可结合自己业务进行修改
-     */
-    const res = response.data
-    if (response.status !== 200 && response.status !== 304) {
-      console.log({
-        message: res.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-      // 50008:非法的token 50012:其他客户端登录了  50014:Token 过期了
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {}
-      return Promise.reject('error')
+    // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
+    // 否则的话抛出错误
+    if (response.status === 200) {
+      return Promise.resolve(response)
     } else {
-      return response
+      return Promise.reject(response)
     }
   },
   error => {
-    console.log(error.response) // for debug
-    var msg = '网络出现问题'
-    if (error.response && error.response.data && error.response.data.message) {
-      msg = error.response.data.message
-      console.log(msg)
-    }
     return Promise.reject(error)
   }
 )
-export default service
+
+export default instance

@@ -10,11 +10,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'https://api.weixin.qq.com/',//后端接口地址
+      '/apis': {
+        target: 'http://25288o7y03.qicp.vip:57998/',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
-            '^/api': '/api',//重写,
+            '^/apis': '/apis',//重写,
         }
       }
     },
