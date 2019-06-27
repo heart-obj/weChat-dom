@@ -21,7 +21,7 @@
           <span class="basic-row-title">申请登记</span>
         </div>
         <div class="mint-cell-box" @click="loanType">
-          <mt-field label="贷款类型" placeholder="请选择" v-model="fromData.loanType"></mt-field>
+          <mt-field label="贷款类型" placeholder="请选择" v-model="fromData.loanType" :readonly="true"></mt-field>
         </div>
         <div class="mint-cell-box">
           <mt-field label="贷款金额" placeholder="请输入" ></mt-field>

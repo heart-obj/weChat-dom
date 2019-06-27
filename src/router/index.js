@@ -122,7 +122,7 @@ router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
   document.title = to.meta.title
   // 第一次访问
-  const token = window.localStorage.getItem('token')
+  const token = store.state.token
   if (!token && to.path !== '/Login') {
     // 保存用户进入的url
     console.log(to.fullPath)
@@ -133,7 +133,7 @@ router.beforeEach((to, from, next) => {
     store.dispatch('getUserInfo').catch(err => {
       console.log(err)
       window.localStorage.removeItem('token')
-      router.go(0)
+      // router.go()
     })
     next()
   } else {

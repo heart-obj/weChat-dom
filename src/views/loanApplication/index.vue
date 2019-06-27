@@ -21,8 +21,8 @@
         上传身份证要求：<span style="color: #ff4633">1、照片清晰   2、亮度均匀   3、四角完整</span>
       </div>
       <div class="idCard-row">
-        <div class="idCard-img" @click="uploadIdCard"><img src="./img/idcards_heads.png" alt="" srcset=""></div>
-        <div class="idCard-img" @click="uploadIdCard"><img src="./img/idcards_national.png" alt="" srcset=""></div>
+        <div class="idCard-img" @click="uploadIdCard('idcards_heads')"><img v-if="!formData.idcards_heads" src="./img/idcards_heads.png" alt="" srcset=""><img v-if="formData.idcards_heads" :src="formData.idcards_heads" alt="" srcset=""></div>
+        <div class="idCard-img" @click="uploadIdCard('idcards_national')"><img v-if="!formData.idcards_national" src="./img/idcards_national.png" alt="" srcset=""><img v-if="formData.idcards_national" :src="formData.idcards_national" alt="" srcset=""></div>
       </div>
       <footer class="footer">
         <label for="weuiAgree" class="weui-agree" >
@@ -151,7 +151,9 @@ export default {
         cellNumber: null,
         verify: null,
         yhnumber: null,
-        yhnumber2: null
+        yhnumber2: null,
+        idcards_heads: null,
+        idcards_national: null
       },
       ifType: ['birthday', 'gender', 'region'],
       actions: [
@@ -172,17 +174,17 @@ export default {
         {
           name: '相册',
           method: () => {
-            this.wxConfig()
-            // this.formData.gender = '男'
+            this.wxConfig(['album'])
           }
         },
         {
           name: '拍摄',
           method: () => {
-            // this.formData.gender = '女'
+            this.wxConfig(['camera'])
           }
         }
       ],
+      idCardName: null,
       idCardVisible: false,
       sheetVisible: false,
       cityPupop: false,
@@ -191,19 +193,13 @@ export default {
       config: null
     }
   },
-  created () {
-    this.getConfig()
+  created () {},
+  mounted () {
+    document.title = '贷款身份认证'
   },
   methods: {
-    getConfig() {
-      getConfigData().then(res => {
-        console.log(res.data)
-        this.config = res.data
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    wxConfig () {
+    wxConfig (jsApi) {
+      const _this = this
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: 'wx6a6d99dc83602162', // 必填，公众号的唯一标识
@@ -211,14 +207,18 @@ export default {
         nonceStr: this.$store.state.nonceStr, // 必填，生成签名的随机串
         signature: this.$store.state.signature, // 必填，签名
         jsApiList: [
-          'token'
+          'chooseImage'
         ] // 必填，需要使用的JS接口列表
       })
-      wx.ready((res) => {
-        console.log(res)
-      })
-      wx.error((err) => {
-        console.log(err)
+      wx.chooseImage({
+        count: 1, // 默认9
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: jsApi, // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          let localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+          _this.formData[_this.idCardName] = localIds[0]
+          alert(localIds[0])
+        }
       })
     },
     cleartxt (e) {
@@ -252,7 +252,8 @@ export default {
     /**
      * 控制身份证上传弹窗
      */
-    uploadIdCard () {
+    uploadIdCard (idCardName) {
+      this.idCardName = idCardName
       this.idCardVisible = true
     },
     /**

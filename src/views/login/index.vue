@@ -33,12 +33,16 @@ export default {
         getToken().then(res => {
           this.token = res.data.access_token
           window.localStorage.setItem('token', res.data.access_token)
+          this.$store.commit('token', res.data.access_token)
           getticket({
             access_token: res.data.access_token 
           }).then(res => {
-            let str = `jsapi_ticket=${res.data.ticket}&noncestr=${nonceStr}&timestamp=${res.data.expires_in}&url=http://llb95520.hicp.net:26073`
+            console.log(res.data.ticket)
+            let getUrl = window.location.href.split('#')[0]
+            let timestamp = (Date.parse(new Date()) - 3000) / 1000
+            let str = `jsapi_ticket=${res.data.ticket}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${getUrl}`
             this.$store.commit('signature', sha1(str))
-            this.$store.commit('timestamp', sha1(res.data.expires_in))
+            this.$store.commit('timestamp', timestamp)
           })
         })
        

@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {
-        target: 'http://25288o7y03.qicp.vip:57998/',//后端接口地址
+        target: 'http://25288o7y03.qicp.vip:27375/',//后端接口地址
         changeOrigin: true,//是否允许跨越
         pathRewrite: {
             '^/apis': '/apis',//重写,
@@ -21,7 +21,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: '192.168.100.5', // can be overwritten by process.env.HOST
-    port: 1234, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

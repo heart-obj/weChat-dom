@@ -35,6 +35,13 @@ export function getToken (params) {
     params
   })
 }
+export function getUserInfo (params) {
+  return request({
+    method: 'post',
+    url: `/get_user_info`,
+    params
+  })
+}
 export function getConfigData (params) {
   return request({
     method: 'get',

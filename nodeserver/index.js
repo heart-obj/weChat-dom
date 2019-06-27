@@ -22,7 +22,7 @@ const appID = 'wx6a6d99dc83602162'
 const appSecret = '3b154028714a7120a44bd252fbe7d70a'
 
 // 授权回调域名
-let host = `http://llb95520.hicp.net:26073`
+let host = `http://25288o7y03.qicp.vip`
 // 授权后重定向url地址 注意是编码后url，不编码#后面的参数会消失
 let redirectUrl = encodeURIComponent(`${host}/wechat_login`)
 // 微信授权url地址,点击授权后跳转到重定向地址并带上code参数
@@ -83,7 +83,6 @@ function getAccessToken(code) {
     return new Promise((resolve, reject) => {
         const getAccessUrl = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appID}&secret=${appSecret}&code=${code}&grant_type=authorization_code`
         https.get(getAccessUrl, (res) => {
-            console.log(res)
             res.setEncoding('utf8') // 设置编码为 utf8
             let rawData = '' // 二进制原始数据
             res.on('data', (chunk) => {
@@ -102,7 +101,6 @@ function getAccessToken2 () {
     return new Promise((resolve, reject) => {
         const getAccessTokenUrl = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appID}&secret=${appSecret}`
         https.get(getAccessTokenUrl, (res) => {
-            console.log(res)
             res.setEncoding('utf8') // 设置编码为 utf8
             let rawData = '' // 二进制原始数据
             res.on('data', (chunk) => {
@@ -153,9 +151,10 @@ function getticket (access_token) {
     })
 }
 app.post('/get_user_info', function (req, res) {
+    console.log(req.get('Authorization'))
     if(req.get('Authorization')){
-        const payload = parseToken(req.get('Authorization'))
-        res.json(payload)
+        // const payload = parseToken(req.get('Authorization'))
+        res.json(req.get('Authorization'))
     }else{
         res.send('缺少token')
     }
@@ -181,7 +180,6 @@ function parseToken(token) {
     const JWT_SECRET = 'weixin_token' // 秘钥
     // decode
     var decoded = jwt.decode(token, JWT_SECRET)
-    console.log(decoded) //=> payload
     return decoded
 }
 
@@ -200,10 +198,9 @@ app.get('/test', async function (req, res) {
             access_token
         } = retToken
         const subscribeInfo = await getSubscribeMsg(access_token, openid)
-        console.log(subscribeInfo)
     } else {
         // 进行微信授权
-        let callbackUrl = encodeURIComponent('http://llb95520.hicp.net:26073/test')
+        let callbackUrl = encodeURIComponent('http://25288o7y03.qicp.vip/test')
         let getCodeUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appID}&redirect_uri=` +
             `${callbackUrl}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
         res.redirect(getCodeUrl)
