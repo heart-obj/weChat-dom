@@ -22,7 +22,11 @@ export default {
           window.location.href = res.data.url 
         })
       } else {
-        this.getwechat_login(code[2])
+        if (this.$store.state.signature) {
+         
+        } else {
+          this.getwechat_login(code[2])
+        }
       }
     },
     getwechat_login (code) {
@@ -31,18 +35,21 @@ export default {
       }).then(res => {
         let nonceStr = this.randomWord (true, 10, 24)
         getToken().then(res => {
-          this.token = res.data.access_token
           window.localStorage.setItem('token', res.data.access_token)
+          this.token = res.data.access_token
           this.$store.commit('token', res.data.access_token)
           getticket({
             access_token: res.data.access_token 
           }).then(res => {
-            console.log(res.data.ticket)
             let getUrl = window.location.href.split('#')[0]
             let timestamp = (Date.parse(new Date()) - 3000) / 1000
             let str = `jsapi_ticket=${res.data.ticket}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${getUrl}`
             this.$store.commit('signature', sha1(str))
             this.$store.commit('timestamp', timestamp)
+            this.$router.push({
+              name: 'LoanApplication',
+              query: ''
+            })
           })
         })
        
